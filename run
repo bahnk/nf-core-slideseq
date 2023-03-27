@@ -1,0 +1,11 @@
+#!/bin/sh
+
+nextflow run main.nf \
+	--input test/samplesheet.csv \
+	--outdir results \
+	--genome GRCm38 \
+	-profile test \
+	-config conf/custom.config \
+	-work-dir work \
+	-resume
+

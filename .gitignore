@@ -1,8 +1,9 @@
+*.o
+*.pyc
+.DS_Store
 .nextflow*
-work/
 data/
 results/
-.DS_Store
-testing/
 testing*
-*.pyc
+testing/
+work/
