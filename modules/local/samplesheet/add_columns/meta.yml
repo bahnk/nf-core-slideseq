@@ -1,0 +1,28 @@
+name: samplesheet_add_columns
+description: Add required columns for Slide-seq data processing
+keywords:
+  - preprocessing
+  - samplesheet
+tools:
+  - slideseq-tools:
+      description: >
+        Tools to process Slide-seq data
+      documentation: https://github.com/bahnk/slideseq-tools-py
+      license: ["GPLv3"]
+input:
+  - samplesheet:
+      type: file
+      description: >
+        Sample sheet as CSV file
+output:
+  - samplesheet:
+      type: file
+      description: >
+        Sample sheet with additional columns as CSV file
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@bahnk"

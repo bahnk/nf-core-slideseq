@@ -3,15 +3,18 @@ process MERGE {
 	tag "$meta.id"
 
 	input:
-	tuple val(meta), path(fastq1), path(fastq2)
+	tuple val(meta), file(fastq1), file(fastq2)
 
 	output:
-	tuple val(meta), path("${meta.id}_R1.fastq.gz"), path("${meta.id}_R2.fastq.gz")  ,  emit: fastqs
+	tuple val(meta), file("${meta.id}.R1.fastq.gz"), file("${meta.id}.R2.fastq.gz")  ,  emit: reads
 	path "versions.yml"                                                              ,  emit: versions
 
 	script:
-	def n1 = meta.n_fastq_read1
-	def n2 = meta.n_fastq_read2
+	def n1 = fastq1.size()
+	def n2 = fastq2.size()
+
+    // this should fail because the output files will be missing
+    // no need to return an error value
 	if ( n1 != n2 )
 	{
 		"""
@@ -27,8 +30,15 @@ process MERGE {
 		echo "Read 1 has ${n1} file"
 		echo "Read 2 has ${n2} file"
 		echo "We copy the files"
-		cp -v $fastq1 "${meta.id}_R1.fastq.gz"
-		cp -v $fastq2 "${meta.id}_R2.fastq.gz"
+
+		cp -v $fastq1 "${meta.id}.R1.fastq.gz"
+		cp -v $fastq2 "${meta.id}.R2.fastq.gz"
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            bash: \$(bash --version | sed -n '1s/.*version \\([0-9\\.]\\+\\).*/\\1/p')
+            cat: \$(cat --version | sed -n '1s/.* //p')
+        END_VERSIONS
 		"""
 	}
 
@@ -38,8 +48,15 @@ process MERGE {
 		echo "Read 1 has ${n1} files"
 		echo "Read 2 has ${n2} files"
 		echo "We merge the files"
-		cat $fastq1 > "${meta.id}_R1.fastq.gz"
-		cat $fastq2 > "${meta.id}_R2.fastq.gz"
+
+		cat $fastq1 > "${meta.id}.R1.fastq.gz"
+		cat $fastq2 > "${meta.id}.R2.fastq.gz"
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            bash: \$(bash --version | sed -n '1s/.*version \\([0-9\\.]\\+\\).*/\\1/p')
+            cat: \$(cat --version | sed -n '1s/.* //p')
+        END_VERSIONS
 		"""
 	}
 }

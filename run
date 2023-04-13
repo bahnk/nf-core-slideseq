@@ -1,9 +1,12 @@
 #!/bin/sh
 
+export JAVA_CMD=/usr/lib/jvm/java-11-openjdk/bin/java
+
 nextflow run main.nf \
-	--input test/samplesheet.csv \
+	--input test/data/samplesheet.csv \
 	--outdir results \
-	--genome GRCm38 \
+    --igenomes_base /home/hibari/job/aws-igenomes/references \
+	--genome EB2 \
 	-profile test \
 	-config conf/custom.config \
 	-work-dir work \
