@@ -4,44 +4,46 @@ keywords:
   - preprocessing
   - fastq
 tools:
-  - umi_tools:
+  - cat:
       description: >
-        UMI-tools contains tools for dealing with Unique Molecular Identifiers (UMIs)/Random Molecular Tags (RMTs)
-        and single cell RNA-Seq cell barcodes
-      documentation: https://umi-tools.readthedocs.io/en/latest/
-      license: ["MIT"]
+        The cat utility shall read files in sequence and shall write their
+        contents to the standard output in the same sequence.
+      documentation: http://man.cat-v.org/unix-1st/1/cat
+      license: ["GPLv3"]
 input:
   - meta:
       type: map
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - fastq1:
+  - reads1:
       type: list
       description: |
-        List of input FASTQ files whose UMIs will be extracted.
+        List of input FastQ files for read 1.
+  - reads2:
+      type: list
+      description: |
+        List of input FastQ files for read 2.
 output:
   - meta:
       type: map
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - reads:
+  - reads1:
       type: file
       description: >
-        Extracted FASTQ files. |
-        For single-end reads, pattern is \${prefix}.umi_extract.fastq.gz. |
-        For paired-end reads, pattern is \${prefix}.umi_extract_{1,2}.fastq.gz.
-      pattern: "*.{fastq.gz}"
-  - log:
+        Output FastQ, a concatenation of the input FastQ files for read 1.
+      pattern: "*.R1.{fastq.gz}"
+  - reads2:
       type: file
-      description: Logfile for umi_tools
-      pattern: "*.{log}"
+      description: >
+        Output FastQ, a concatenation of the input FastQ files for read 2.
+      pattern: "*.R2.{fastq.gz}"
   - versions:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
 
 authors:
-  - "@drpatelh"
-  - "@grst"
+  - "@bahnk"

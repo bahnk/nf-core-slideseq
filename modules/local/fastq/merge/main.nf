@@ -3,15 +3,15 @@ process MERGE {
 	tag "$meta.id"
 
 	input:
-	tuple val(meta), file(fastq1), file(fastq2)
+	tuple val(meta), path(reads1), path(reads2)
 
 	output:
-	tuple val(meta), file("${meta.id}.R1.fastq.gz"), file("${meta.id}.R2.fastq.gz")  ,  emit: reads
+	tuple val(meta), path("${meta.id}.R1.fastq.gz"), path("${meta.id}.R2.fastq.gz")  ,  emit: reads
 	path "versions.yml"                                                              ,  emit: versions
 
 	script:
-	def n1 = fastq1.size()
-	def n2 = fastq2.size()
+	def n1 = reads1.size()
+	def n2 = reads2.size()
 
     // this should fail because the output files will be missing
     // no need to return an error value
@@ -31,8 +31,8 @@ process MERGE {
 		echo "Read 2 has ${n2} file"
 		echo "We copy the files"
 
-		cp -v $fastq1 "${meta.id}.R1.fastq.gz"
-		cp -v $fastq2 "${meta.id}.R2.fastq.gz"
+		cp -v $reads1 "${meta.id}.R1.fastq.gz"
+		cp -v $reads2 "${meta.id}.R2.fastq.gz"
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
@@ -49,8 +49,8 @@ process MERGE {
 		echo "Read 2 has ${n2} files"
 		echo "We merge the files"
 
-		cat $fastq1 > "${meta.id}.R1.fastq.gz"
-		cat $fastq2 > "${meta.id}.R2.fastq.gz"
+		cat $reads1 > "${meta.id}.R1.fastq.gz"
+		cat $reads2 > "${meta.id}.R2.fastq.gz"
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
